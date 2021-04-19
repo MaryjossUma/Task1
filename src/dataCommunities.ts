@@ -80,7 +80,7 @@ export const lastStats: AffectedEntry[] = [
   },
   {
     name: "La Rioja",
-    value: 28.34,
+    value: 280.345,
   },
   {
     name: "Andalucía",
