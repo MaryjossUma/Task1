@@ -3,7 +3,7 @@ import * as topojson from "topojson-client";
 const spainjson = require("./spain.json");
 const d3Composite = require("d3-composite-projections");
 import { latLongCommunities } from "./communities";
-import { stats } from "./stats";
+import { stats, lastStats, AffectedEntry } from "./dataCommunities";
 
 const maxAffected = stats.reduce(
   (max, item) => (item.value > max ? item.value : max),
@@ -11,15 +11,24 @@ const maxAffected = stats.reduce(
 );
 
 const affectedRadiusScale = d3
-  .scaleLinear()
-  .domain([0, maxAffected])
-  .range([0, 50]); // 50 pixel max radius, we could calculate it relative to width and height
+  .scaleThreshold<number, number>()
+  .domain([20, 50, 200, 100000, 300000, 500000, 700000])
+  .range([5, 10, 15, 20, 30, 40, 50]);
+
+let data = stats;
 
 const calculateRadiusBasedOnAffectedCases = (comunidad: string) => {
-  const entry = stats.find((item) => item.name === comunidad);
+  const entry = data.find((item) => item.name === comunidad);
 
   return entry ? affectedRadiusScale(entry.value) : 0;
 };
+
+// Tooltip
+const div = d3
+  .select("body")
+  .append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
 
 const svg = d3
   .select("body")
@@ -55,4 +64,37 @@ svg
   .attr("class", "affected-marker")
   .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name))
   .attr("cx", (d) => aProjection([d.long, d.lat])[0])
-  .attr("cy", (d) => aProjection([d.long, d.lat])[1]);
+  .attr("cy", (d) => aProjection([d.long, d.lat])[1])
+  .on("mouseover", function (e: any, datum: any) {
+    const affected = data.find((item) => item.name === datum.name).value;
+    const coords = { x: e.x, y: e.y };
+    div.transition().duration(200).style("opacity", 0.9);
+    div
+      .html(`<span>${datum.name}: ${affected}</span>`)
+      .style("left", `${coords.x}px`)
+      .style("top", `${coords.y - 28}px`);
+  })
+  .on("mouseout", function (datum) {
+    div.transition().duration(500).style("opacity", 0);
+  });
+
+const updateChart = (affectedData: AffectedEntry[]) => {
+  data = affectedData;
+  d3.selectAll("circle")
+    .data(latLongCommunities)
+    .transition()
+    .duration(500)
+    .attr("r", (d) => calculateRadiusBasedOnAffectedCases(d.name));
+};
+
+document
+  .getElementById("first")
+  .addEventListener("click", function handlFirstResults() {
+    updateChart(stats);
+  });
+
+document
+  .getElementById("last")
+  .addEventListener("click", function handlLastResults() {
+    updateChart(lastStats);
+  });
