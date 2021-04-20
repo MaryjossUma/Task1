@@ -1,19 +1,19 @@
 # Task1. Mandatory Task
 
-We have to face three challenges here:
+We have to face two challenges here:
 
-- Add updated data.
-- Create two buttons to swap from inital data to updated.
+- Adding updated data.
+- Create two buttons to go from the initial data to the latest data.
 
 # Steps
 
-- We will take as starting example _02-pin-location-scale_, let's copy the content from that folder and execute _npm install_.
+- Let's take _02-pin-location-scale_ as an initial example, copy the contents of that folder and run _npm install_.
 
 ```bash
 npm install
 ```
 
-- We need coronavirus data updated. We created a new file _dataCommunities.ts_ where we placed initial data and last data.
+- We need to update the coronavirus data. We create a new file _dataCommunities.ts_ where we place the first and last data.
 
 - Now instead of importing _stats_ we will import _dataCommunites_.
 
@@ -24,7 +24,7 @@ _./src/index.ts_
 + import { stats, lastStats, AffectedEntry } from "./dataCommunities";
 ```
 
-- Let's create a variable to save the data, and change _stast_ into _data_ in _calculateRadiusBasedOnAffectedCases_
+- Let's create a variable to save the data, and change _stast_ in _data_ in _calculateRadiusBasedOnAffectedCases_.
 
 _./src/index.ts_
 
@@ -39,7 +39,7 @@ const calculateRadiusBasedOnAffectedCases = (comunidad: string) => {
 };
 ```
 
-- We created a method to update the circle with the data(inital or lastest).
+- We created a method to update the circles with the data(inital or lastest).
 
 _./src/index.ts_
 
@@ -54,7 +54,7 @@ _./src/index.ts_
 + };
 ```
 
-- In the _index.html_ we are going to add the two buttons to can update the map circles.
+- In the _index.html_ we are going to add the two buttons to be able to update the map circles.
 
 _./src/index.html_
 
@@ -86,9 +86,9 @@ _./src/index.ts_
 +  });
 ```
 
-- We have very differents ranges in inital data(0-200) and in last data(48000 - 650000).
+- We have very differents ranges in the inital data(0-200) and in the last data(48000 - 650000).
 
-- For this reason we changed the scale from linear to Threshold, and added a new domain and range.
+- For this reason we change the scale from linear to threshold, and add a new domain and range.
 
 _./src/index.ts_
 
@@ -102,9 +102,9 @@ const affectedRadiusScale = d3
 +  .range([5, 10, 15, 20, 30, 40, 50]);
 ```
 
--To see better the number of affected in each community we decide to implement a tooltip.
+- To better see the number of people affected in each community we decided to implement a tooltip.
 
--First we append a div, wit class 'tooltip' and opacity 0 to the body.
+- First we add a div, with class 'tooltip' and opacity 0 to the body.
 
 _./src/index.ts_
 
@@ -117,11 +117,11 @@ _./src/index.ts_
 +  .style("opacity", 0)
 ```
 
--Let's add mouse events to the circles, on mouseover, we find the number of affected in data,
-then the coords in the event.
--Add a transition into div.tooltip and change opcity to 0.9, to see the dive
--We create a span, where add the information _name: number of affected_ and the coords.
--On mouseout, to hidden the tooltip we change opacity to 0.
+- Let's add mouse events to the circles, on mouseover, we look for the number of affected
+  in the data variable, then the coordinates in the mouse event.
+- We add a transition in div.tooltip and change the opcity to 0.9, to see the div.
+- We create a span, where add the information _name: number of affected_ and the coordinates.
+- On mouseout, to hide the tooltip we change the opacity to 0..
 
 _./src/index.ts_
 
@@ -144,7 +144,7 @@ _./src/index.ts_
 +  });
 ```
 
--Add a new file, _styles.css_ where apply styles for the tooltip.
+- We add a new file, _styles.css_ where to apply the styles for the tooltip.
 
 _./src/styles.css_
 
@@ -163,7 +163,7 @@ _./src/styles.css_
 +}
 ```
 
--Lastly, add this file into _index.html_'
+- Lastly, add this file into _index.html_'.
 
 _./src/index.html_
 
